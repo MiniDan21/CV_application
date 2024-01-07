@@ -44,10 +44,12 @@ def extract_zip(zip_path, extract_path=None):
 def _parent(file: Path):
     return file.parent
 
-def path_array(dir):
+def path_array(dir, string=False):
     files = []
     for file_name in os.listdir(dir):
         file_path = Path(dir, file_name)
+        if string:
+            file_path = str(file_path)
         files.append(file_path)
     return files
 
@@ -66,7 +68,7 @@ def check_files(file_path=None, dir_path=None, files_path=None) -> bool:
     dir_ex   = False
     files_ex = False
     if file_path:
-        file_ex =  os.path.exists(file_path)
+        file_ex = os.path.exists(file_path)
     if dir_path:
         dir_ex = os.path.exists(dir_path)
     if files_path:

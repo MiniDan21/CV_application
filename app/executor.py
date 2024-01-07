@@ -20,7 +20,12 @@ class Executor:
         self._cout= ""
     
     def _execute(self, num, *args, **kwargs):
-        self._cout = self._methods[num](*args, **kwargs)
+        try:
+            self._cout = self._methods[num](*args, **kwargs)
+        except KeyboardInterrupt:
+            self._cout = "Выход из подпрограммы."
+        except Exception:
+            pass
     
     def _output(self):
         if self._cout:
@@ -56,8 +61,5 @@ class Executor:
                 if res:
                     self.state = res - 1
             if self.state != -1:
-                try:
-                    self._execute(self.state)
-                except Exception:
-                    pass
+                self._execute(self.state)
                 self._output()

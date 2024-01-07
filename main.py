@@ -1,5 +1,5 @@
 '''Основной модуль для запуска приложения'''
-from commands import executor
+from app import executor
 
 
 def main():
