@@ -44,6 +44,16 @@ def extract_zip(zip_path, extract_path=None):
 def _parent(file: Path):
     return file.parent
 
+def check_type(filename):
+    videos = ["mp4", "mov", "wmv", "avi", "avchd", "webm", "flv", "mkv", "f4v", "swf", "gif"]
+    images = ["png", "jpeg", "jpg", "pict", "pct", "webp", "jp2"]
+    ext = str(filename).split('.')[-1]
+    if ext in videos:
+        return "video"
+    elif ext in images:
+        return "image"
+    return None
+
 def path_array(dir, string=False):
     files = []
     for file_name in os.listdir(dir):

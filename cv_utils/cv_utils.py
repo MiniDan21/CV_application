@@ -37,26 +37,6 @@ def draw_circle(frame, circle, color=(255, 255, 0), thickness=1):
 	# if prev_point2 is not None:
 	# 	draw_line(frame, center, prev_point2)
 
-def skelezation(img):
-	size = np.size(img)
-	skel = np.zeros(img.shape,np.uint8)
-
-	ret,img = cv2.threshold(img,127,255,0)
-	element = cv2.getStructuringElement(cv2.MORPH_CROSS,(3,3))
-	done = False
-
-	while(not done):
-		eroded = cv2.erode(img,element)
-		temp = cv2.dilate(eroded,element)
-		temp = cv2.subtract(img,temp)
-		skel = cv2.bitwise_or(skel,temp)
-		img = eroded.copy()
-
-		zeros = size - cv2.countNonZero(img)
-		if zeros==size:
-			done = True
-
-	return skel
 
 def cut_by_circle(frame, circle=None, diff=25, center_diff=0, spec_cut=False):
 	canvas = np.zeros_like(frame, dtype=frame.dtype)
@@ -161,3 +141,16 @@ def draw_line(frame, point1=None, point2=None):
 		new_arc = count_degree(point1, point2)
 		cv2.putText(frame, str(round(new_arc)), (0, 12), 
 				cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,0), 2, 2)
+
+
+def clahe(frame, first=True, second=True, third=True, clipLimit=2.0, gridSize=8):
+	f, s, t = cv2.split(frame)
+	clahe = cv2.createCLAHE(clipLimit=clipLimit, tileGridSize=(gridSize, gridSize))
+	if first:
+		f = clahe.apply(f)
+	if second:
+		s = clahe.apply(s)
+	if third:
+		t = clahe.apply(t)
+	
+	return cv2.merge((f, s, t))

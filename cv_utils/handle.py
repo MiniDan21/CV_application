@@ -8,29 +8,34 @@ def handle_frame(image=None, solve=lambda frame: frame, video_frame=False, image
     if not video_frame:
         frame = None
         if image is not None:
-            while True:
-                if type(image) is str:
-                    frame = cv2.imread(image).copy()
-                elif type(image) is np.ndarray:
-                    frame = image.copy()
-                    
+            if type(image) is str:
+                frame = cv2.imread(image).copy()
+            elif type(image) is np.ndarray:
+                frame = image.copy()
+            result = solve(frame)
+            window_name = "Result"
+            cv2.imshow(window_name, result)
+            # cv2.setWindowProperty(window_name, cv2.WND_PROP_TOPMOST, 1)
+            while True:        
                 result = solve(frame)
-                cv2.imshow("Result", result)
-        
+                window_name = "Result"
+                cv2.imshow(window_name, result)
                 k = cv2.waitKey(10) & 0xFF
                 if (k == ord('q')):
                     break
         elif len(images):
-            while True:
-                for image in images:
-                    if type(image) is str:
-                        frame = cv2.imread(image).copy()
-                    elif type(image) is np.ndarray:
-                        frame = image.copy()
-
-                    result = solve(frame)
-                    cv2.imshow(image, result)
+            results = []
+            for image in images:
+                if type(image) is str:
+                    frame = cv2.imread(image).copy()
+                elif type(image) is np.ndarray:
+                    frame = image.copy()
+                results.append((image, solve(frame)))
             
+            for image, result in results:
+                cv2.imshow(image, result)
+                # cv2.setWindowProperty(image, cv2.WND_PROP_TOPMOST, 1)
+            while True:
                 k = cv2.waitKey(10) & 0xFF
                 if (k == ord('q')):
                     break
@@ -39,6 +44,8 @@ def handle_frame(image=None, solve=lambda frame: frame, video_frame=False, image
         frame = image
         result = solve(frame)
         return result
+
+    cv2.destroyAllWindows()
 
 # Функция для обработки видео покадрово. Принимает на вход видео(или камеру) и функцию для решения заданной задачи
 def handle_video(video: str | int, solve=lambda frame: frame):
@@ -51,8 +58,12 @@ def handle_video(video: str | int, solve=lambda frame: frame):
         else:
             break
 
-        cv2.imshow("Result", result)
+        window_name = "Result"
+        cv2.imshow(window_name, result)
+        # cv2.setWindowProperty(window_name, cv2.WND_PROP_TOPMOST, 1)
 	
         k = cv2.waitKey(10) & 0xFF
         if (k == ord('q')):
             break
+    cap.release()
+    cv2.destroyAllWindows()

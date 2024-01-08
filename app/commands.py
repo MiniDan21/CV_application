@@ -7,16 +7,6 @@ from cv_utils import handle_video, handle_frame
 from red_valve import run
 
 
-def _check_type(filename):
-    videos = ["mp4"]
-    images = ["png"]
-    ext = str(filename).split('.')[-1]
-    if ext in videos:
-        return "video"
-    elif ext in images:
-        return "image"
-    return None
-
 def custom_video():
     global CUSTOM_VIDEO_PATH, VIDEOS_DIR, LINK_CUSTOM_ZIP
 
@@ -63,7 +53,7 @@ def open_file():
     filename = input("Укажите имя файла, который надо открыть\n>")
     filename_obj = Path(filename)
     file_path = None
-    file_type = _check_type(filename_obj)
+    file_type = check_type(filename_obj)
     if file_type == "video":
         file_path = str(Path(VIDEOS_DIR, filename_obj))
     elif file_type == "image":
@@ -71,7 +61,7 @@ def open_file():
 
     result = None
     if check_files(file_path=file_path):
-        file_type = _check_type(file_path)
+        file_type = check_type(file_path)
         if file_type == "video":
             result = run(video_file=file_path)
         elif file_type == "image":
@@ -94,7 +84,7 @@ def input_google_link():
     download_unpack(GOOGLE_DRIVE_LINK.format(id), temp_dir)
     check_temp(temp_dir)
     for filename_obj in path_array(temp_dir):
-        file_type = _check_type(filename_obj)
+        file_type = check_type(filename_obj)
         if file_type == "video":
             move_file_to_dir(filename_obj, VIDEOS_DIR)
         elif file_type ==  "image":

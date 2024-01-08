@@ -32,7 +32,7 @@ class Executor:
             print_yellow(self._cout)
             self._reset()
         elif self.state == -1:
-            sleep(1)
+            sleep(0.5)
             print_menu(self.main_states)
         else:
             print_error()
